@@ -1,201 +1,246 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { SliderModule } from 'primeng/slider';
+import { DialogModule } from 'primeng/dialog';
+import { CarouselModule } from 'primeng/carousel';
+import { TagModule } from 'primeng/tag';
+import { DividerModule } from 'primeng/divider';
 
-interface Product {
+interface Produto {
   id: number;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  image: string;
-  category: string;
-  rating: number;
-  isNew?: boolean;
-  description?: string;
+  nome: string;
+  descricao: string;
+  preco: number;
+  precoOriginal?: number;
+  categoria: string;
+  tamanho: string[];
+  cor: string[];
+  imagem: string;
+  imagens: string[];
+  emEstoque: boolean;
+  destaque: boolean;
 }
 
 @Component({
   selector: 'app-loja',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    CardModule,
+    InputTextModule,
+    DropdownModule,
+    SliderModule,
+    DialogModule,
+    CarouselModule,
+    TagModule,
+    DividerModule
+  ],
   templateUrl: './loja.component.html',
   styleUrls: ['./loja.component.scss']
 })
 export class LojaComponent implements OnInit {
-  allProducts: Product[] = [
-    {
-      id: 1,
-      name: 'Blusa Feminina Elegante',
-      price: 89.90,
-      originalPrice: 129.90,
-      image: 'assets/image/1.jpg',
-      category: 'Feminino',
-      rating: 4.8,
-      isNew: true,
-      description: 'Blusa feminina elegante com tecido premium e acabamento sofisticado. Ideal para ocasiões especiais e uso diário.'
-    },
-    {
-      id: 2,
-      name: 'Camisa Social Masculina',
-      price: 120.00,
-      image: 'assets/image/2.jpg',
-      category: 'Masculino',
-      rating: 4.6,
-      description: 'Camisa social masculina de alta qualidade, com tecido resistente e caimento perfeito. Disponível em várias cores.'
-    },
-    {
-      id: 3,
-      name: 'Vestido Floral Feminino',
-      price: 150.00,
-      originalPrice: 200.00,
-      image: 'assets/image/3.jpg',
-      category: 'Feminino',
-      rating: 4.9,
-      description: 'Vestido floral feminino com estampa delicada e design moderno. Perfeito para eventos especiais e passeios.'
-    },
-    {
-      id: 4,
-      name: 'Calça Jeans Masculina',
-      price: 95.00,
-      image: 'assets/image/4.jpg',
-      category: 'Masculino',
-      rating: 4.7,
-      isNew: true,
-      description: 'Calça jeans masculina com tecido de alta qualidade e design moderno. Confortável e durável para uso diário.'
-    },
-    {
-      id: 5,
-      name: 'Jaqueta Feminina',
-      price: 180.00,
-      originalPrice: 250.00,
-      image: 'assets/image/5.jpg',
-      category: 'Feminino',
-      rating: 4.5,
-      description: 'Jaqueta feminina elegante com design moderno e tecido resistente. Perfeita para complementar qualquer look.'
-    },
-    {
-      id: 6,
-      name: 'Tênis Esportivo',
-      price: 220.00,
-      image: 'assets/image/6.jpg',
-      category: 'Acessórios',
-      rating: 4.4,
-      description: 'Tênis esportivo com tecnologia avançada para máximo conforto e performance. Ideal para atividades físicas.'
-    },
-    {
-      id: 7,
-      name: 'Bolsa Feminina',
-      price: 85.00,
-      originalPrice: 120.00,
-      image: 'assets/image/7.jpg',
-      category: 'Acessórios',
-      rating: 4.8,
-      description: 'Bolsa feminina elegante com acabamento premium e espaço interno generoso. Perfeita para uso diário.'
-    },
-    {
-      id: 8,
-      name: 'Cinto Masculino',
-      price: 45.00,
-      image: 'assets/image/8.jpg',
-      category: 'Acessórios',
-      rating: 4.6,
-      isNew: true,
-      description: 'Cinto masculino de couro genuíno com fivela elegante. Acessório essencial para complementar qualquer look.'
-    }
-  ];
+  produtos: Produto[] = [];
+  produtosFiltrados: Produto[] = [];
+  produtoSelecionado: Produto | null = null;
+  modalVisible = false;
+  
+  // Filtros
+  busca = '';
+  categoriaSelecionada = '';
+  tamanhoSelecionado = '';
+  corSelecionada = '';
+  precoRange: number[] = [0, 1000];
+  
+  categorias = ['Todas', 'Camisetas', 'Calças', 'Sapatos', 'Acessórios'];
+  tamanhos = ['Todos', 'P', 'M', 'G', 'GG'];
+  cores = ['Todas', 'Preto', 'Branco', 'Azul', 'Vermelho', 'Verde'];
 
-  selectedProduct: Product | null = null;
-  selectedSize: string = 'M';
-  selectedColor: string = '#ff6b6b';
-  quantity: number = 1;
-
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
+  ngOnInit() {
+    this.carregarProdutos();
+    this.aplicarFiltros();
   }
 
-  getDiscountPercentage(currentPrice: number, originalPrice: number): number {
-    return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+  carregarProdutos() {
+    // Dados mockados para demonstração
+    this.produtos = [
+      {
+        id: 1,
+        nome: 'Camiseta Básica',
+        descricao: 'Camiseta 100% algodão, confortável e durável. Perfeita para o dia a dia.',
+        preco: 49.90,
+        precoOriginal: 69.90,
+        categoria: 'Camisetas',
+        tamanho: ['P', 'M', 'G', 'GG'],
+        cor: ['Preto', 'Branco', 'Azul'],
+        imagem: 'assets/image/1.jpg',
+        imagens: ['assets/image/1.jpg', 'assets/image/2.jpg', 'assets/image/3.jpg'],
+        emEstoque: true,
+        destaque: true
+      },
+      {
+        id: 2,
+        nome: 'Calça Jeans Slim',
+        descricao: 'Calça jeans moderna com corte slim, ideal para looks casuais e elegantes.',
+        preco: 129.90,
+        categoria: 'Calças',
+        tamanho: ['M', 'G', 'GG'],
+        cor: ['Azul', 'Preto'],
+        imagem: 'assets/image/4.jpg',
+        imagens: ['assets/image/4.jpg', 'assets/image/5.jpg'],
+        emEstoque: true,
+        destaque: true
+      },
+      {
+        id: 3,
+        nome: 'Tênis Esportivo',
+        descricao: 'Tênis confortável para atividades físicas e uso casual.',
+        preco: 199.90,
+        precoOriginal: 249.90,
+        categoria: 'Sapatos',
+        tamanho: ['38', '39', '40', '41', '42'],
+        cor: ['Branco', 'Preto'],
+        imagem: 'assets/image/6.jpg',
+        imagens: ['assets/image/6.jpg', 'assets/image/7.jpg'],
+        emEstoque: true,
+        destaque: false
+      },
+      {
+        id: 4,
+        nome: 'Relógio Elegante',
+        descricao: 'Relógio com design moderno e elegante, perfeito para ocasiões especiais.',
+        preco: 299.90,
+        categoria: 'Acessórios',
+        tamanho: ['Único'],
+        cor: ['Preto', 'Prata'],
+        imagem: 'assets/image/8.jpg',
+        imagens: ['assets/image/8.jpg', 'assets/image/9.jpg'],
+        emEstoque: true,
+        destaque: true
+      },
+      {
+        id: 5,
+        nome: 'Jaqueta Bomber',
+        descricao: 'Jaqueta bomber com estilo urbano e confortável.',
+        preco: 179.90,
+        categoria: 'Camisetas',
+        tamanho: ['M', 'G', 'GG'],
+        cor: ['Preto', 'Verde'],
+        imagem: 'assets/image/10.jpg',
+        imagens: ['assets/image/10.jpg', 'assets/image/11.jpg'],
+        emEstoque: true,
+        destaque: false
+      },
+      {
+        id: 6,
+        nome: 'Bolsa Casual',
+        descricao: 'Bolsa prática e elegante para o dia a dia.',
+        preco: 89.90,
+        categoria: 'Acessórios',
+        tamanho: ['Único'],
+        cor: ['Marrom', 'Preto'],
+        imagem: 'assets/image/1.jpg',
+        imagens: ['assets/image/1.jpg', 'assets/image/2.jpg'],
+        emEstoque: true,
+        destaque: false
+      }
+    ];
   }
 
-  formatPrice(price: number): string {
-    return price.toFixed(2).replace('.', ',');
+  aplicarFiltros() {
+    this.produtosFiltrados = this.produtos.filter(produto => {
+      // Filtro de busca
+      const matchBusca = !this.busca || 
+        produto.nome.toLowerCase().includes(this.busca.toLowerCase()) ||
+        produto.descricao.toLowerCase().includes(this.busca.toLowerCase());
+      
+      // Filtro de categoria
+      const matchCategoria = !this.categoriaSelecionada || 
+        this.categoriaSelecionada === 'Todas' || 
+        produto.categoria === this.categoriaSelecionada;
+      
+      // Filtro de tamanho
+      const matchTamanho = !this.tamanhoSelecionado || 
+        this.tamanhoSelecionado === 'Todos' || 
+        produto.tamanho.includes(this.tamanhoSelecionado);
+      
+      // Filtro de cor
+      const matchCor = !this.corSelecionada || 
+        this.corSelecionada === 'Todas' || 
+        produto.cor.includes(this.corSelecionada);
+      
+      // Filtro de preço
+      const matchPreco = produto.preco >= this.precoRange[0] && 
+        produto.preco <= this.precoRange[1];
+      
+      return matchBusca && matchCategoria && matchTamanho && matchCor && matchPreco;
+    });
   }
 
-  addToCart(product: Product): void {
-    console.log('Produto adicionado ao carrinho:', product.name);
-    // Aqui você pode implementar a lógica do carrinho
+  abrirModal(produto: Produto) {
+    this.produtoSelecionado = produto;
+    this.modalVisible = true;
   }
 
-  addToFavorites(product: Product): void {
-    console.log('Produto adicionado aos favoritos:', product.name);
-    // Aqui você pode implementar a lógica dos favoritos
+  fecharModal() {
+    this.modalVisible = false;
+    this.produtoSelecionado = null;
   }
 
-  quickView(product: Product): void {
-    this.openProductModal(product);
+  limparFiltros() {
+    this.busca = '';
+    this.categoriaSelecionada = '';
+    this.tamanhoSelecionado = '';
+    this.corSelecionada = '';
+    this.precoRange = [0, 1000];
+    this.aplicarFiltros();
   }
 
-  getSaleProducts(): Product[] {
-    return this.allProducts.filter(p => p.originalPrice).slice(0, 4);
+  getProdutosDestaque() {
+    return this.produtos.filter(p => p.destaque);
   }
 
-  sendContactMessage(): void {
-    console.log('Mensagem de contato enviada');
-    // Aqui você pode implementar a lógica de envio de mensagem
+  calcularDesconto(preco: number, precoOriginal?: number): number {
+    if (!precoOriginal) return 0;
+    return Math.round(((precoOriginal - preco) / precoOriginal) * 100);
   }
 
-  // Header methods
+  getColorValue(cor: string): string {
+    const colorMap: { [key: string]: string } = {
+      'Preto': '#000000',
+      'Branco': '#FFFFFF',
+      'Azul': '#0066CC',
+      'Vermelho': '#FF0000',
+      'Verde': '#00AA00',
+      'Prata': '#C0C0C0',
+      'Marrom': '#8B4513'
+    };
+    return colorMap[cor] || '#CCCCCC';
+  }
+
   openCart(): void {
     console.log('Abrindo carrinho de compras');
-    // Aqui você pode implementar a navegação para o carrinho
+    // Implementar lógica do carrinho
   }
 
   goToLogin(): void {
     console.log('Navegando para tela de login');
-    this.router.navigate(['/login']);
+    // Implementar navegação para login
   }
 
-  // Modal methods
-  openProductModal(product: Product): void {
-    this.selectedProduct = product;
-    this.selectedSize = 'M';
-    this.selectedColor = '#ff6b6b';
-    this.quantity = 1;
-    document.body.style.overflow = 'hidden';
+  addToCart(produto: Produto): void {
+    console.log('Produto adicionado ao carrinho:', produto.nome);
+    // Implementar lógica do carrinho
   }
 
-  closeProductModal(): void {
-    this.selectedProduct = null;
-    document.body.style.overflow = 'auto';
-  }
-
-  selectSize(size: string): void {
-    this.selectedSize = size;
-  }
-
-  selectColor(color: string): void {
-    this.selectedColor = color;
-  }
-
-  increaseQuantity(): void {
-    if (this.quantity < 10) {
-      this.quantity++;
-    }
-  }
-
-  decreaseQuantity(): void {
-    if (this.quantity > 1) {
-      this.quantity--;
-    }
-  }
-
-  addToCartFromModal(): void {
-    if (this.selectedProduct) {
-      console.log('Produto adicionado ao carrinho da modal:', {
-        product: this.selectedProduct.name,
-        size: this.selectedSize,
-        color: this.selectedColor,
-        quantity: this.quantity
-      });
-      this.closeProductModal();
-    }
+  addToFavorites(produto: Produto): void {
+    console.log('Produto adicionado aos favoritos:', produto.nome);
+    // Implementar lógica dos favoritos
   }
 } 
