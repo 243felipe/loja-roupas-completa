@@ -1,0 +1,382 @@
+.dashboard-container {
+  padding: 1rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+  
+  h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #495057;
+  }
+  
+  p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 1.1rem;
+  }
+}
+
+// Cards de Resumo
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 1.25rem;
+  }
+  
+  .card-content {
+    flex: 1;
+    
+    h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .card-value {
+      margin: 0 0 0.25rem 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #495057;
+    }
+    
+    .card-change {
+      font-size: 0.75rem;
+      font-weight: 500;
+      
+      &.positive {
+        color: #28a745;
+      }
+      
+      &.negative {
+        color: #dc3545;
+      }
+      
+      &.neutral {
+        color: #6c757d;
+      }
+    }
+  }
+}
+
+// Seção de Gráficos
+.charts-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.chart-container {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  
+  h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #495057;
+  }
+  
+  canvas {
+    height: 300px !important;
+  }
+}
+
+// Seção do Slideshow
+.slideshow-section {
+  margin-bottom: 2rem;
+}
+
+.slideshow-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+  
+  ::ng-deep .p-card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    margin: 0;
+    
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+  }
+  
+  ::ng-deep .p-card-body {
+    padding: 0;
+  }
+}
+
+.slideshow-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.slideshow-wrapper {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-content {
+  padding: 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cliente-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  
+  .cliente-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+  }
+  
+  .cliente-info {
+    flex: 1;
+    
+    h4 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #495057;
+    }
+    
+    .cliente-email {
+      font-size: 0.875rem;
+      color: #6c757d;
+    }
+  }
+  
+  .ultima-compra {
+    text-align: right;
+    
+    .compra-valor {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #667eea;
+    }
+    
+    small {
+      font-size: 0.75rem;
+      color: #6c757d;
+    }
+  }
+}
+
+.observacao-content {
+  .observacao-tipo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    
+    .tipo-badge {
+      background: #e3f2fd;
+      color: #1976d2;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .observacao-data {
+      font-size: 0.75rem;
+      color: #6c757d;
+    }
+  }
+  
+  .observacao-texto {
+    margin: 0;
+    color: #495057;
+    line-height: 1.5;
+    font-size: 0.9rem;
+  }
+}
+
+// Controles do Slideshow
+.slideshow-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  
+  .control-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+      background: #667eea;
+      color: white;
+      transform: scale(1.1);
+    }
+    
+    i {
+      font-size: 0.875rem;
+    }
+  }
+  
+  .slide-indicators {
+    display: flex;
+    gap: 0.5rem;
+    
+    .indicator {
+      width: 0.75rem;
+      height: 0.75rem;
+      border: none;
+      border-radius: 50%;
+      background: #dee2e6;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &.active {
+        background: #667eea;
+        transform: scale(1.2);
+      }
+      
+      &:hover {
+        background: #adb5bd;
+      }
+    }
+  }
+}
+
+.no-observations {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: #6c757d;
+  
+  i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 0.5rem;
+  }
+  
+  .page-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .charts-section {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .cliente-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    
+    .ultima-compra {
+      text-align: left;
+    }
+  }
+  
+  .slideshow-controls {
+    padding: 0.75rem 1rem;
+    
+    .control-btn {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+}
+

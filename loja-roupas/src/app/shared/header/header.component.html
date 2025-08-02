@@ -1,0 +1,25 @@
+<header class="header">
+  <div class="header-content">
+    <div class="header-left">
+      <button class="sidebar-toggle" (click)="toggleSidebar()">
+        <i class="fa-solid fa-bars" [class.rotated]="sidebarCollapsed"></i>
+      </button>
+      <h1 class="header-title">Gestão de Controle</h1>
+    </div>
+    <div class="header-right">
+      <div class="user-info">
+        <i class="pi pi-user"></i>
+        <span>Felipe</span>
+      </div>
+      <div class="header-actions">
+        <button pButton icon="pi pi-home" class="p-button-text p-button-rounded" 
+                pTooltip="Voltar à Loja" tooltipPosition="bottom" 
+                routerLink="/loja"></button>
+        <button pButton icon="pi pi-bell" class="p-button-text p-button-rounded" 
+                pTooltip="Notificações" tooltipPosition="bottom"></button>
+        <button pButton icon="pi pi-cog" class="p-button-text p-button-rounded" 
+                pTooltip="Configurações" tooltipPosition="bottom"></button>
+      </div>
+    </div>
+  </div>
+</header>

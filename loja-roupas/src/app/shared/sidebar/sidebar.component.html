@@ -1,0 +1,50 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <div class="logo">
+      <i class="pi pi-shopping-bag"></i>
+      <span class="logo-text">Geisy Store</span>
+    </div>
+  </div>
+  
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link">
+          <i class="pi pi-home"></i>
+          <span class="nav-text">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/admin/produtos" routerLinkActive="active" class="nav-link">
+          <i class="pi pi-box"></i>
+          <span class="nav-text">Produtos</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/admin/vendas" routerLinkActive="active" class="nav-link">
+          <i class="pi pi-shopping-cart"></i>
+          <span class="nav-text">Vendas</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/admin/clientes" routerLinkActive="active" class="nav-link">
+          <i class="pi pi-users"></i>
+          <span class="nav-text">Clientes</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/admin/estoque" routerLinkActive="active" class="nav-link">
+          <i class="pi pi-database"></i>
+          <span class="nav-text">Estoque</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+  <div class="sidebar-footer">
+    <div class="sidebar-info">
+      <p class="footer-text">Versão 1.0.0</p>
+      <small class="footer-text">Felipe Cunha</small>
+    </div>
+  </div>
+</aside>

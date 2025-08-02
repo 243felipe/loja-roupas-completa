@@ -1,0 +1,256 @@
+.vendas-container {
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h1 {
+      margin: 0;
+      color: #2c3e50;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+  }
+
+  .filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .search-box {
+      flex: 1;
+      max-width: 400px;
+
+      .p-input-icon-left {
+        width: 100%;
+
+        input {
+          width: 100%;
+          padding-left: 2.5rem;
+        }
+      }
+    }
+
+    .filter-box {
+      min-width: 200px;
+    }
+  }
+
+  .content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .cliente-info {
+      strong {
+        display: block;
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      small {
+        color: #6c757d;
+        font-size: 0.875rem;
+      }
+    }
+
+    .itens-info {
+      .quantidade-itens {
+        display: block;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+      }
+
+      .produtos-lista {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        align-items: center;
+
+        .mais-itens {
+          font-size: 0.75rem;
+          color: #6c757d;
+          background: #f8f9fa;
+          padding: 0.125rem 0.375rem;
+          border-radius: 4px;
+          margin-left: 0.25rem;
+        }
+      }
+    }
+
+    .valor-info {
+      .valor-total {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1rem;
+      }
+    }
+
+    .data-venda {
+      color: #6c757d;
+      font-size: 0.875rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+  }
+}
+
+// Modal styles
+.modal-content {
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    input,
+    textarea,
+    p-dropdown {
+      width: 100%;
+    }
+  }
+
+  .itens-section {
+    margin-top: 2rem;
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
+
+    .itens-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      h3 {
+        margin: 0;
+        color: #2c3e50;
+        font-size: 1.2rem;
+      }
+    }
+
+    .itens-list {
+      margin-bottom: 1rem;
+
+      .item-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr auto;
+        gap: 1rem;
+        align-items: end;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
+
+        label {
+          display: block;
+          margin-bottom: 0.25rem;
+          font-weight: 500;
+          color: #2c3e50;
+          font-size: 0.875rem;
+        }
+
+        .item-acoes {
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+
+    .valor-total-section {
+      text-align: right;
+      padding: 1rem;
+      background: #e9ecef;
+      border-radius: 8px;
+
+      .valor-total-display {
+        h3 {
+          margin: 0;
+          color: #2c3e50;
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .vendas-container {
+    padding: 1rem;
+
+    .header {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .filters {
+      flex-direction: column;
+
+      .search-box {
+        max-width: none;
+      }
+    }
+  }
+
+  .modal-content {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Table responsive
+@media (max-width: 1024px) {
+  .content {
+    overflow-x: auto;
+
+    p-table {
+      min-width: 1000px;
+    }
+  }
+}

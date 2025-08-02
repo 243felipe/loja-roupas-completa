@@ -1,0 +1,187 @@
+<div class="produtos-container">
+  <div class="header">
+    <h1>Gestão de Produtos</h1>
+    <p-button label="Novo Produto" icon="pi pi-plus" (onClick)="abrirModal()" [disabled]="loading">
+    </p-button>
+  </div>
+
+  <div class="content">
+    <p-table [value]="produtos" [loading]="loading" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} produtos"
+      [rowsPerPageOptions]="[5, 10, 25, 50]" styleClass="p-datatable-sm">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Imagem</th>
+          <th>Nome</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Tamanhos</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-produto>
+        <tr>
+          <td>
+            <img [src]="produto.imagens[0] || 'assets/image/placeholder.jpg'" [alt]="produto.nome"
+              class="product-image">
+          </td>
+          <td>
+            <div class="product-info">
+              <strong>{{produto.nome}}</strong>
+              <small>{{produto.descricao}}</small>
+            </div>
+          </td>
+          <td>
+            <p-tag [value]="produto.categoria" severity="info"></p-tag>
+          </td>
+          <td>
+            <div class="price-info">
+              <span class="current-price">R$ {{produto.preco | number:'1.2-2'}}</span>
+              <span class="original-price" *ngIf="produto.precoOriginal">
+                R$ {{produto.precoOriginal | number:'1.2-2'}}
+              </span>
+            </div>
+          </td>
+
+          <td>
+            <div class="sizes-container">
+              <p-chip *ngFor="let tamanho of produto.tamanhos.slice(0, 3)" [label]="tamanho" severity="secondary">
+              </p-chip>
+              <span *ngIf="produto.tamanhos.length > 3" class="more-sizes">
+                +{{produto.tamanhos.length - 3}}
+              </span>
+            </div>
+          </td>
+          <td>
+            <p-tag [value]="getStatusText(produto.novo)" [severity]="produto.novo ? 'success' : 'warning'">
+            </p-tag>
+          </td>
+          <td>
+            <div class="actions">
+              <p-button icon="pi pi-pencil" severity="secondary" size="small" pTooltip="Editar"
+                (onClick)="abrirModal(produto)">
+              </p-button>
+              <p-button icon="pi pi-trash" severity="danger" size="small" pTooltip="Deletar"
+                (onClick)="deletarProduto(produto.id!)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center">
+            <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+            <p *ngIf="!loading">Nenhum produto encontrado</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- Modal de Produto -->
+<p-dialog [(visible)]="showModal" [modal]="true" [style]="{width: '90vw', maxWidth: '800px'}" [draggable]="false"
+  [resizable]="false" (onHide)="fecharModal()" [header]="editando ? 'Editar Produto' : 'Novo Produto'">
+
+  <div class="modal-content">
+    <form (ngSubmit)="salvarProduto()" #produtoForm="ngForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nome">Nome *</label>
+          <input id="nome" type="text" pInputText [(ngModel)]="produto.nome" name="nome" required>
+        </div>
+
+        <div class="form-group">
+          <label for="categoria">Categoria *</label>
+          <p-dropdown id="categoria" [options]="categorias" [(ngModel)]="produto.categoria" name="categoria"
+            placeholder="Selecione uma categoria" required>
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="descricao">Descrição *</label>
+        <textarea id="descricao" pInputTextarea [(ngModel)]="produto.descricao" name="descricao" [rows]="3" required>
+        </textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="preco">Preço *</label>
+          <p-inputNumber id="preco" [(ngModel)]="produto.preco" name="preco" mode="currency" currency="BRL" [min]="0"
+            required>
+          </p-inputNumber>
+        </div>
+
+        <div class="form-group">
+          <label for="precoOriginal">Preço Original</label>
+          <p-inputNumber id="precoOriginal" [(ngModel)]="produto.precoOriginal" name="precoOriginal" mode="currency"
+            currency="BRL" [min]="0">
+          </p-inputNumber>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Imagens *</label>
+          <div class="images-container">
+            <div *ngFor="let imagem of produto.imagens; let i = index" class="image-item">
+              <img [src]="imagem" [alt]="'Imagem ' + (i + 1)">
+              <p-button icon="pi pi-times" severity="danger" size="small" (onClick)="removerImagem(i)">
+              </p-button>
+            </div>
+            <p-button label="Adicionar Imagem" icon="pi pi-plus" (onClick)="adicionarImagem()">
+            </p-button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Tamanhos *</label>
+        <div class="sizes-container">
+          <div class="size-buttons">
+            <button 
+              *ngFor="let tamanho of tamanhos" 
+              type="button"
+              class="size-button"
+              [class.selected]="isTamanhoSelecionado(tamanho)"
+              (click)="selecionarTamanho(tamanho)">
+              {{tamanho}}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="desconto">Desconto (%)</label>
+          <p-inputNumber id="desconto" [(ngModel)]="produto.desconto" name="desconto" [min]="0" [max]="100">
+          </p-inputNumber>
+        </div>
+
+        <div class="form-group">
+          <label for="rating">Rating</label>
+          <p-inputNumber id="rating" [(ngModel)]="produto.rating" name="rating" [min]="0" [max]="5" [step]="0.1">
+          </p-inputNumber>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <p-checkbox [(ngModel)]="produto.novo" name="novo" [binary]="true" label="Produto Novo">
+        </p-checkbox>
+      </div>
+    </form>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" icon="pi pi-times" (onClick)="fecharModal()" severity="secondary">
+    </p-button>
+    <p-button label="Salvar" icon="pi pi-check" (onClick)="salvarProduto()" [loading]="loading">
+    </p-button>
+  </ng-template>
+</p-dialog>

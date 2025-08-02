@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DER e MER - Sistema de Loja de Roupas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #3b82f6;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .der-diagram {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        .entity {
+            margin-bottom: 30px;
+        }
+
+        .entity h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #eff6ff;
+            border-radius: 6px;
+        }
+
+        .entity-code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        .relationships {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .relationship {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .relationship h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .relationship p {
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .feature {
+            background: #f0fdf4;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #22c55e;
+        }
+
+        .feature h4 {
+            color: #166534;
+            margin-bottom: 5px;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 20px;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 DER e MER</h1>
+            <p>Sistema de Loja de Roupas - Documentação Técnica</p>
+        </div>
+
+        <div class="section">
+            <h2>📊 DER (Diagrama Entidade-Relacionamento)</h2>
+            <div class="der-diagram">
+                ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+                │ CLIENTES │ │ VENDAS │ │ PRODUTOS │
+                ├─────────────────┤ ├─────────────────┤ ├─────────────────┤
+                │ PK: id │ │ PK: id │ │ PK: id │
+                │ nome │ │ FK: cliente_id │◄────────┤ nome │
+                │ email │ │ data_venda │ │ descricao │
+                │ telefone │ │ valor_total │ │ preco │
+                │ cpf │ │ status │ │ categoria │
+                │ endereco │ │ forma_pagamento │ │ marca │
+                │ data_cadastro │ │ observacoes │ │ novo │
+                │ ativo │ └─────────────────┘ │ rating │
+                └─────────────────┘ │ │ desconto │
+                │ │ │ ativo │
+                │ │ └─────────────────┘
+                │ │ │
+                │ │ │
+                └────────────────────────────┘ │
+                │
+                │
+                ┌─────────────────┐ ┌─────────────────┐ │
+                │ ITENS_VENDA │ │ PRODUTO_CORES │ │
+                ├─────────────────┤ ├─────────────────┤ │
+                │ PK: id │ │ PK: id │ │
+                │ FK: venda_id │◄────────┤ FK: produto_id │◄─────────────────┘
+                │ FK: produto_id │◄────────┤ cor │
+                │ quantidade │ │ ativo │
+                │ preco_unitario │ └─────────────────┘
+                │ subtotal │
+                └─────────────────┘
+                ┌─────────────────┐
+                │ PRODUTO_TAMANHOS│
+                ├─────────────────┤
+                │ PK: id │
+                │ FK: produto_id │◄─────────────────┐
+                │ tamanho │ │
+                │ quantidade │ │
+                │ ativo │ │
+                └─────────────────┘ │
+                │
+                ┌─────────────────┐ │
+                │ PRODUTO_IMAGENS │ │
+                ├─────────────────┤ │
+                │ PK: id │ │
+                │ FK: produto_id │◄─────────────────┘
+                │ url_imagem │
+                │ principal │
+                │ ativo │
+                └─────────────────┘
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <div class="section">
+            <h2>🗂️ MER (Modelo Entidade-Relacionamento)</h2>
+
+            <div class="entity">
+                <h3>1. ENTIDADE: CLIENTES</h3>
+                <div class="entity-code">
+                    CLIENTES (id, nome, email, telefone, cpf, endereco, data_cadastro, ativo)
+                    - id: Chave Primária (PK) - Auto incremento
+                    - nome: VARCHAR(255) - Nome completo do cliente
+                    - email: VARCHAR(255) - Email único do cliente
+                    - telefone: VARCHAR(20) - Telefone de contato
+                    - cpf: VARCHAR(14) - CPF único do cliente
+                    - endereco: TEXT - Endereço completo
+                    - data_cadastro: TIMESTAMP - Data de cadastro
+                    - ativo: BOOLEAN - Status do cliente
+                </div>
+            </div>
+
+            <div class="entity">
+                <h3>2. ENTIDADE: PRODUTOS</h3>
+                <div class="entity-code">
+                    PRODUTOS (id, nome, descricao, preco, categoria, marca, novo, rating, desconto, ativo)
+                    - id: Chave Primária (PK) - Auto incremento
+                    - nome: VARCHAR(255) - Nome do produto
+                    - descricao: TEXT - Descrição detalhada
+                    - preco: DECIMAL(10,2) - Preço do produto
+                    - categoria: VARCHAR(100) - Categoria do produto
+                    - marca: VARCHAR(100) - Marca do produto
+                    - novo: BOOLEAN - Indica se é produto novo
+                    - rating: DECIMAL(3,2) - Avaliação média
+                    - desconto: DECIMAL(5,2) - Percentual de desconto
+                    - ativo: BOOLEAN - Status do produto
+                </div>
+            </div>
+
+            <div class="entity">
+                <h3>3. ENTIDADE: VENDAS</h3>
+                <div class="entity-code">
+                    VENDAS (id, cliente_id, data_venda, valor_total, status, forma_pagamento, observacoes)
+                    - id: Chave Primária (PK) - Auto incremento
+                    - cliente_id: Chave Estrangeira (FK) → CLIENTES.id
+                    - data_venda: TIMESTAMP - Data e hora da venda
+                    - valor_total: DECIMAL(10,2) - Valor total da venda
+                    - status: ENUM - Status da venda (PENDENTE, APROVADA, EM_PREPARACAO, ENVIADA, ENTREGUE, CANCELADA)
+                    - forma_pagamento: VARCHAR(50) - Forma de pagamento
+                    - observacoes: TEXT - Observações da venda
+                </div>
+            </div>
+
+            <div class="entity">
+                <h3>4. ENTIDADE: ITENS_VENDA</h3>
+                <div class="entity-code">
+                    ITENS_VENDA (id, venda_id, produto_id, quantidade, preco_unitario, subtotal)
+                    - id: Chave Primária (PK) - Auto incremento
+                    - venda_id: Chave Estrangeira (FK) → VENDAS.id
+                    - produto_id: Chave Estrangeira (FK) → PRODUTOS.id
+                    - quantidade: INTEGER - Quantidade vendida
+                    - preco_unitario: DECIMAL(10,2) - Preço unitário no momento da venda
+                    - subtotal: DECIMAL(10,2) - Subtotal do item (quantidade * preco_unitario)
+                </div>
+            </div>
+
+            <div class="entity">
+                <h3>5. ENTIDADE: PRODUTO_CORES</h3>
+                <div class="entity-code">
+                    PRODUTO_CORES (id, produto_id, cor, ativo)
+                    - id: Chave Primária (PK) - Auto incremento
+                    - produto_id: Chave Estrangeira (FK) → PRODUTOS.id
+                    - cor: VARCHAR(50) - Nome da cor
+                    - ativo: BOOLEAN - Status da cor
+                </div>
+            </div>
+
+            <div class="entity">
+                <h3>6. ENTIDADE: PRODUTO_TAMANHOS</h3>
+                <div class="entity-code">
+                    PRODUTO_TAMANHOS (id, produto_id, tamanho, quantidade, ativo)
+                    - id: Chave Primária (PK) - Auto incremento
+                    - produto_id: Chave Estrangeira (FK) → PRODUTOS.id
+                    - tamanho: VARCHAR(10) - Tamanho do produto
+                    - quantidade: INTEGER - Quantidade em estoque
+                    - ativo: BOOLEAN - Status do tamanho
+                </div>
+            </div>
+
+            <div class="entity">
+                <h3>7. ENTIDADE: PRODUTO_IMAGENS</h3>
+                <div class="entity-code">
+                    PRODUTO_IMAGENS (id, produto_id, url_imagem, principal, ativo)
+                    - id: Chave Primária (PK) - Auto incremento
+                    - produto_id: Chave Estrangeira (FK) → PRODUTOS.id
+                    - url_imagem: VARCHAR(500) - URL da imagem
+                    - principal: BOOLEAN - Indica se é imagem principal
+                    - ativo: BOOLEAN - Status da imagem
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <div class="section">
+            <h2>🔗 RELACIONAMENTOS</h2>
+            <div class="relationships">
+                <div class="relationship">
+                    <h4>1. CLIENTES ↔ VENDAS</h4>
+                    <p><strong>Tipo:</strong> 1:N (Um cliente pode ter várias vendas)</p>
+                    <p><strong>Cardinalidade:</strong> (1,1) ↔ (0,N)</p>
+                    <p><strong>Descrição:</strong> Um cliente pode realizar múltiplas vendas, mas cada venda pertence a
+                        um único cliente</p>
+                </div>
+
+                <div class="relationship">
+                    <h4>2. VENDAS ↔ ITENS_VENDA</h4>
+                    <p><strong>Tipo:</strong> 1:N (Uma venda pode ter vários itens)</p>
+                    <p><strong>Cardinalidade:</strong> (1,1) ↔ (1,N)</p>
+                    <p><strong>Descrição:</strong> Uma venda é composta por vários itens, e cada item pertence a uma
+                        única venda</p>
+                </div>
+
+                <div class="relationship">
+                    <h4>3. PRODUTOS ↔ ITENS_VENDA</h4>
+                    <p><strong>Tipo:</strong> 1:N (Um produto pode estar em vários itens de venda)</p>
+                    <p><strong>Cardinalidade:</strong> (1,1) ↔ (0,N)</p>
+                    <p><strong>Descrição:</strong> Um produto pode ser vendido em várias vendas, mas cada item de venda
+                        refere-se a um único produto</p>
+                </div>
+
+                <div class="relationship">
+                    <h4>4. PRODUTOS ↔ PRODUTO_CORES</h4>
+                    <p><strong>Tipo:</strong> 1:N (Um produto pode ter várias cores)</p>
+                    <p><strong>Cardinalidade:</strong> (1,1) ↔ (0,N)</p>
+                    <p><strong>Descrição:</strong> Um produto pode estar disponível em várias cores</p>
+                </div>
+
+                <div class="relationship">
+                    <h4>5. PRODUTOS ↔ PRODUTO_TAMANHOS</h4>
+                    <p><strong>Tipo:</strong> 1:N (Um produto pode ter vários tamanhos)</p>
+                    <p><strong>Cardinalidade:</strong> (1,1) ↔ (0,N)</p>
+                    <p><strong>Descrição:</strong> Um produto pode estar disponível em vários tamanhos</p>
+                </div>
+
+                <div class="relationship">
+                    <h4>6. PRODUTOS ↔ PRODUTO_IMAGENS</h4>
+                    <p><strong>Tipo:</strong> 1:N (Um produto pode ter várias imagens)</p>
+                    <p><strong>Cardinalidade:</strong> (1,1) ↔ (0,N)</p>
+                    <p><strong>Descrição:</strong> Um produto pode ter múltiplas imagens para exibição</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📈 ESTATÍSTICAS ATUAIS DO SISTEMA</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">24.000</div>
+                    <div class="stat-label">Clientes Cadastrados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">32.000</div>
+                    <div class="stat-label">Produtos Disponíveis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">16.000</div>
+                    <div class="stat-label">Vendas Realizadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Entidades Principais</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 FUNCIONALIDADES SUPORTADAS</h2>
+            <div class="features">
+                <div class="feature">
+                    <h4>1. Gestão de Clientes</h4>
+                    <p>Cadastro, edição, consulta e histórico de compras</p>
+                </div>
+                <div class="feature">
+                    <h4>2. Gestão de Produtos</h4>
+                    <p>Cadastro com cores, tamanhos e galeria de imagens</p>
+                </div>
+                <div class="feature">
+                    <h4>3. Controle de Vendas</h4>
+                    <p>Criação e acompanhamento de status em tempo real</p>
+                </div>
+                <div class="feature">
+                    <h4>4. Controle de Estoque</h4>
+                    <p>Gestão por tamanho e produto com alertas</p>
+                </div>
+                <div class="feature">
+                    <h4>5. Dashboard</h4>
+                    <p>Estatísticas e relatórios em tempo real</p>
+                </div>
+                <div class="feature">
+                    <h4>6. Loja Virtual</h4>
+                    <p>Exibição de produtos para clientes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

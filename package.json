@@ -1,0 +1,25 @@
+{
+    "name": "loja-roupas-completa",
+    "version": "1.0.0",
+    "description": "Sistema completo de loja virtual com Angular e Spring Boot",
+    "scripts": {
+        "install-deps": "cd loja-roupas && npm install",
+        "start-backend": "cd loja-roupas-api && mvn spring-boot:run",
+        "start-frontend": "cd loja-roupas && npm start",
+        "build-frontend": "cd loja-roupas && npm run build",
+        "test-frontend": "cd loja-roupas && npm test",
+        "clean": "cd loja-roupas-api && mvn clean && cd ../loja-roupas && npm run clean"
+    },
+    "keywords": [
+        "angular",
+        "spring-boot",
+        "ecommerce",
+        "loja-virtual"
+    ],
+    "author": "Desenvolvedor",
+    "license": "MIT",
+    "engines": {
+        "node": ">=18.0.0",
+        "npm": ">=8.0.0"
+    }
+}

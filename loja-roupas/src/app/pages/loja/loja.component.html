@@ -1,0 +1,429 @@
+<!-- Main Content -->
+<main class="main-content">
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <h1 class="logo-text">GStore</h1>
+        </div>
+        <div class="header-actions">
+          <button class="cart-btn" (click)="openCart()">
+            <span class="icon">🛍️</span>
+            <span class="cart-count">0</span>
+          </button>
+          <button class="login-btn" (click)="goToLogin()">
+            <span class="icon">👤</span>
+            <span>Acessar</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h6 class="hero-subtitle">✨ Nova Coleção</h6>
+          <h1 class="hero-title">Estilo & Elegância</h1>
+          <p class="hero-description">
+            Descubra nossa coleção exclusiva de roupas. Qualidade premium, preços irresistíveis e entrega rápida para
+            você.
+          </p>
+          <div class="hero-buttons">
+            <a href="#" class="hero-button primary">
+              <span class="icon">🛍️</span>
+              <span>Comprar Agora</span>
+            </a>
+            <a href="#" class="hero-button secondary">
+              <span class="icon">👁️</span>
+              <span>Ver Coleção</span>
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-number">10K+</span>
+              <span class="stat-label">Clientes Satisfeitos</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">500+</span>
+              <span class="stat-label">Produtos Premium</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">24h</span>
+              <span class="stat-label">Entrega Rápida</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="assets/image/1.jpg" alt="Hero Image" class="hero-img">
+          <div class="hero-badge">
+            <span class="badge-text">🔥 Oferta Especial</span>
+            <span class="badge-discount">-50% OFF</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section class="products-section">
+    <div class="container">
+      <div class="section-header">
+        <h6 class="section-subtitle">🌟 Coleção Exclusiva</h6>
+        <h2 class="section-title">Roupas que Combinam com Você</h2>
+        <p class="section-description">Produtos selecionados com carinho para realçar seu estilo único</p>
+        <div class="section-filters">
+          <button class="filter-btn active" data-filter="all">
+            <span class="icon">📱</span>
+            <span>Todos</span>
+          </button>
+          <button class="filter-btn" data-filter="feminino">
+            <span class="icon">👩</span>
+            <span>Feminino</span>
+          </button>
+          <button class="filter-btn" data-filter="masculino">
+            <span class="icon">👨</span>
+            <span>Masculino</span>
+          </button>
+          <button class="filter-btn" data-filter="acessorios">
+            <span class="icon">💎</span>
+            <span>Acessórios</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card" *ngFor="let product of allProducts.slice(0, 8)" (click)="openProductModal(product)">
+          <div class="product-image">
+            <img [src]="product.image" [alt]="product.name" class="product-img">
+            <div class="product-overlay">
+              <button class="quick-view-btn" (click)="openProductModal(product); $event.stopPropagation()">
+                <span class="icon">👁️</span>
+              </button>
+              <button class="add-to-cart-btn" (click)="addToCart(product); $event.stopPropagation()">
+                <span class="icon">🛒</span>
+                <span>Adicionar</span>
+              </button>
+              <button class="wishlist-btn" (click)="addToFavorites(product); $event.stopPropagation()">
+                <span class="icon">❤️</span>
+              </button>
+            </div>
+            <div class="product-badges">
+              <span class="badge new" *ngIf="product.isNew">Novo</span>
+              <span class="badge sale" *ngIf="product.originalPrice">-{{ getDiscountPercentage(product.price,
+                product.originalPrice) }}%</span>
+            </div>
+            <div class="product-actions">
+              <button class="action-btn" (click)="addToFavorites(product); $event.stopPropagation()">
+                <span class="icon">❤️</span>
+              </button>
+              <button class="action-btn" (click)="openProductModal(product); $event.stopPropagation()">
+                <span class="icon">👁️</span>
+              </button>
+            </div>
+          </div>
+          <div class="product-info">
+            <div class="product-category">{{ product.category }}</div>
+            <h3 class="product-title">{{ product.name }}</h3>
+            <div class="product-rating">
+              <div class="stars">
+                <span class="star" *ngFor="let star of [1,2,3,4,5]">⭐</span>
+              </div>
+              <span class="rating-count">({{ product.rating }})</span>
+            </div>
+            <div class="product-price">
+              <span class="current-price">R$ {{ formatPrice(product.price) }}</span>
+              <span class="original-price" *ngIf="product.originalPrice">R$ {{ formatPrice(product.originalPrice)
+                }}</span>
+            </div>
+            <div class="product-details">
+              <div class="product-sizes">
+                <span class="size-label">Tamanhos:</span>
+                <div class="size-options">
+                  <span class="size-option" *ngFor="let size of ['P', 'M', 'G', 'GG']">{{ size }}</span>
+                </div>
+              </div>
+              <div class="product-variants">
+                <span class="variant-label">Cores:</span>
+                <div class="color-options">
+                  <span class="color-option active" style="background: #ff6b6b;"></span>
+                  <span class="color-option" style="background: #4ecdc4;"></span>
+                  <span class="color-option" style="background: #45b7d1;"></span>
+                </div>
+              </div>
+            </div>
+            <div class="product-stock">
+              <span class="icon">✅</span>
+              <span class="stock-text">Em estoque</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="load-more">
+        <button class="load-more-btn">
+          <span>Carregar Mais Produtos</span>
+          <span class="icon">⬇️</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <span class="icon">🏷️</span>
+          </div>
+          <h3 class="feature-title">Promoções Especiais</h3>
+          <p class="feature-description">
+            Aproveite nossas ofertas sazonais com descontos exclusivos em produtos selecionados.
+          </p>
+          <a href="#" class="feature-link">Ver Ofertas</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <span class="icon">🚚</span>
+          </div>
+          <h3 class="feature-title">Frete Grátis</h3>
+          <p class="feature-description">
+            Frete grátis em pedidos acima de R$ 99. Entrega rápida e segura para todo Brasil.
+          </p>
+          <a href="#" class="feature-link">Saiba Mais</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <span class="icon">🛡️</span>
+          </div>
+          <h3 class="feature-title">Garantia de 30 Dias</h3>
+          <p class="feature-description">
+            30 dias de garantia. Se não ficar satisfeito, devolvemos seu dinheiro.
+          </p>
+          <a href="#" class="feature-link">Política de Devolução</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Products Section -->
+  <section class="latest-products-section">
+    <div class="container">
+      <div class="section-header">
+        <h6 class="section-subtitle">🌸 Novidades</h6>
+        <h2 class="section-title">Produtos Recém-Chegados</h2>
+        <p class="section-description">Produtos recém-chegados que você vai amar</p>
+      </div>
+
+      <div class="products-grid">
+        <div class="product-card featured" *ngFor="let product of getSaleProducts()"
+          (click)="openProductModal(product)">
+          <div class="product-image">
+            <img [src]="product.image" [alt]="product.name" class="product-img">
+            <div class="product-overlay">
+              <button class="quick-view-btn" (click)="openProductModal(product); $event.stopPropagation()">
+                <span class="icon">👁️</span>
+              </button>
+              <button class="add-to-cart-btn" (click)="addToCart(product); $event.stopPropagation()">
+                <span class="icon">🛒</span>
+                <span>Adicionar</span>
+              </button>
+              <button class="wishlist-btn" (click)="addToFavorites(product); $event.stopPropagation()">
+                <span class="icon">❤️</span>
+              </button>
+            </div>
+            <div class="product-badges">
+              <span class="badge sale">-{{ getDiscountPercentage(product.price, product.originalPrice!) }}%</span>
+            </div>
+            <div class="product-actions">
+              <button class="action-btn" (click)="addToFavorites(product); $event.stopPropagation()">
+                <span class="icon">❤️</span>
+              </button>
+              <button class="action-btn" (click)="openProductModal(product); $event.stopPropagation()">
+                <span class="icon">👁️</span>
+              </button>
+            </div>
+          </div>
+          <div class="product-info">
+            <div class="product-category">{{ product.category }}</div>
+            <h3 class="product-title">{{ product.name }}</h3>
+            <div class="product-rating">
+              <div class="stars">
+                <span class="star" *ngFor="let star of [1,2,3,4,5]">⭐</span>
+              </div>
+              <span class="rating-count">({{ product.rating }})</span>
+            </div>
+            <div class="product-price">
+              <span class="current-price">R$ {{ formatPrice(product.price) }}</span>
+              <span class="original-price">R$ {{ formatPrice(product.originalPrice!) }}</span>
+            </div>
+            <div class="product-details">
+              <div class="product-sizes">
+                <span class="size-label">Tamanhos:</span>
+                <div class="size-options">
+                  <span class="size-option" *ngFor="let size of ['P', 'M', 'G', 'GG']">{{ size }}</span>
+                </div>
+              </div>
+              <div class="product-variants">
+                <span class="variant-label">Cores:</span>
+                <div class="color-options">
+                  <span class="color-option active" style="background: #ff6b6b;"></span>
+                  <span class="color-option" style="background: #4ecdc4;"></span>
+                  <span class="color-option" style="background: #45b7d1;"></span>
+                </div>
+              </div>
+            </div>
+            <div class="product-stock">
+              <span class="icon">✅</span>
+              <span class="stock-text">Em estoque</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Section -->
+  <section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-content">
+        <div class="newsletter-text">
+          <h2 class="newsletter-title">Fique por Dentro das Novidades</h2>
+          <p class="newsletter-description">
+            Receba ofertas exclusivas, dicas de moda e novidades em primeira mão!
+          </p>
+          <div class="newsletter-benefits">
+            <div class="benefit-item">
+              <span class="icon">✅</span>
+              <span>Ofertas exclusivas</span>
+            </div>
+            <div class="benefit-item">
+              <span class="icon">✅</span>
+              <span>Dicas de moda</span>
+            </div>
+            <div class="benefit-item">
+              <span class="icon">✅</span>
+              <span>Novidades em primeira mão</span>
+            </div>
+          </div>
+        </div>
+        <form class="newsletter-form">
+          <div class="input-group">
+            <input type="text" placeholder="Seu nome" class="newsletter-input" required>
+            <input type="email" placeholder="Seu email" class="newsletter-input" required>
+          </div>
+          <button type="submit" class="newsletter-button">
+            <span>Inscrever-se</span>
+            <span class="icon">➡️</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Product Modal -->
+<div class="modal-overlay" *ngIf="selectedProduct" (click)="closeProductModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closeProductModal()">
+      <span class="icon">✖️</span>
+    </button>
+
+    <div class="modal-body">
+      <div class="modal-image">
+        <img [src]="selectedProduct?.image" [alt]="selectedProduct?.name" class="modal-img">
+        <div class="modal-badges">
+          <span class="badge new" *ngIf="selectedProduct?.isNew">Novo</span>
+          <span class="badge sale" *ngIf="selectedProduct?.originalPrice">-{{
+            getDiscountPercentage(selectedProduct?.price || 0, selectedProduct?.originalPrice || 0) }}%</span>
+        </div>
+      </div>
+
+      <div class="modal-info">
+        <div class="modal-category">{{ selectedProduct?.category }}</div>
+        <h2 class="modal-title">{{ selectedProduct?.name }}</h2>
+
+        <div class="modal-rating">
+          <div class="stars">
+            <span class="star" *ngFor="let star of [1,2,3,4,5]">⭐</span>
+          </div>
+          <span class="rating-count">({{ selectedProduct?.rating }})</span>
+          <span class="reviews-count">• 128 avaliações</span>
+        </div>
+
+        <div class="modal-price">
+          <span class="current-price">R$ {{ formatPrice(selectedProduct?.price || 0) }}</span>
+          <span class="original-price" *ngIf="selectedProduct?.originalPrice">R$ {{
+            formatPrice(selectedProduct?.originalPrice || 0) }}</span>
+        </div>
+
+        <div class="modal-description">
+          <h4>Descrição</h4>
+          <p>{{ selectedProduct?.description || 'Produto de alta qualidade, desenvolvido com os melhores materiais e
+            tecnologia avançada para proporcionar a melhor experiência possível.' }}</p>
+        </div>
+
+        <div class="modal-sizes">
+          <h4>Tamanho</h4>
+          <div class="size-options">
+            <button class="size-option-btn" *ngFor="let size of ['P', 'M', 'G', 'GG']"
+              [class.active]="selectedSize === size" (click)="selectSize(size)">
+              {{ size }}
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-colors">
+          <h4>Cor</h4>
+          <div class="color-options">
+            <button class="color-option-btn" *ngFor="let color of ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f39c12']"
+              [style.background-color]="color" [class.active]="selectedColor === color" (click)="selectColor(color)">
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-quantity">
+          <h4>Quantidade</h4>
+          <div class="quantity-selector">
+            <button class="quantity-btn" (click)="decreaseQuantity()">
+              <span class="icon">➖</span>
+            </button>
+            <span class="quantity-value">{{ quantity }}</span>
+            <button class="quantity-btn" (click)="increaseQuantity()">
+              <span class="icon">➕</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="modal-add-cart" (click)="addToCartFromModal()">
+            <span class="icon">🛒</span>
+            <span>Adicionar ao Carrinho</span>
+          </button>
+          <button class="modal-wishlist" (click)="addToFavorites(selectedProduct!)" *ngIf="selectedProduct">
+            <span class="icon">❤️</span>
+          </button>
+        </div>
+
+        <div class="modal-features">
+          <div class="feature-item">
+            <span class="icon">✅</span>
+            <span>Entrega grátis em pedidos acima de R$ 99</span>
+          </div>
+          <div class="feature-item">
+            <span class="icon">✅</span>
+            <span>30 dias de garantia</span>
+          </div>
+          <div class="feature-item">
+            <span class="icon">✅</span>
+            <span>Devolução gratuita</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

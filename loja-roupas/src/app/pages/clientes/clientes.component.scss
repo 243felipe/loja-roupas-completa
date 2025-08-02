@@ -1,0 +1,180 @@
+.clientes-container {
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h1 {
+      margin: 0;
+      color: #2c3e50;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+  }
+
+  .filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .search-box {
+      flex: 1;
+      max-width: 400px;
+
+      .p-input-icon-left {
+        width: 100%;
+
+        input {
+          width: 100%;
+          padding-left: 2.5rem;
+        }
+      }
+    }
+
+    .filter-box {
+      min-width: 200px;
+    }
+  }
+
+  .content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .cliente-info {
+      strong {
+        display: block;
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      small {
+        color: #6c757d;
+        font-size: 0.875rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
+
+    .email {
+      color: #007bff;
+      font-weight: 500;
+    }
+
+    .telefone {
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    .localizacao {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .cidade {
+        color: #2c3e50;
+        font-weight: 500;
+      }
+    }
+
+    .data-cadastro {
+      color: #6c757d;
+      font-size: 0.875rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+  }
+}
+
+// Modal styles
+.modal-content {
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    input,
+    textarea,
+    p-dropdown {
+      width: 100%;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .clientes-container {
+    padding: 1rem;
+
+    .header {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .filters {
+      flex-direction: column;
+
+      .search-box {
+        max-width: none;
+      }
+    }
+  }
+
+  .modal-content {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Table responsive
+@media (max-width: 1024px) {
+  .content {
+    overflow-x: auto;
+
+    p-table {
+      min-width: 800px;
+    }
+  }
+}

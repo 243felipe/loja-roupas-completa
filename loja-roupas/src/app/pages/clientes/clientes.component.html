@@ -1,0 +1,157 @@
+<div class="clientes-container">
+  <div class="header">
+    <h1>Gestão de Clientes</h1>
+    <p-button label="Novo Cliente" icon="pi pi-plus" (onClick)="abrirModal()" [disabled]="loading">
+    </p-button>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="Buscar por nome, email ou telefone..." [(ngModel)]="searchTerm">
+      </span>
+    </div>
+    <div class="filter-box">
+      <p-dropdown [options]="estados" [(ngModel)]="selectedEstado" placeholder="Filtrar por estado" [showClear]="true">
+      </p-dropdown>
+    </div>
+  </div>
+
+  <div class="content">
+    <p-table [value]="getClientesFiltrados()" [loading]="loading" [paginator]="true" [rows]="10"
+      [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes"
+      [rowsPerPageOptions]="[5, 10, 25, 50]" styleClass="p-datatable-sm">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Telefone</th>
+          <th>Cidade/Estado</th>
+          <th>Data Cadastro</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-cliente>
+        <tr>
+          <td>
+            <div class="cliente-info">
+              <strong>{{cliente.nome}}</strong>
+              <small *ngIf="cliente.endereco">{{cliente.endereco}}</small>
+            </div>
+          </td>
+          <td>
+            <span class="email">{{cliente.email}}</span>
+          </td>
+          <td>
+            <span class="telefone">{{formatarTelefone(cliente.telefone || '')}}</span>
+          </td>
+          <td>
+            <div class="localizacao">
+              <span class="cidade">{{cliente.cidade}}</span>
+              <p-tag *ngIf="cliente.estado" [value]="cliente.estado" severity="info"></p-tag>
+            </div>
+          </td>
+          <td>
+            <span class="data-cadastro">
+              {{cliente.dataCadastro | date:'dd/MM/yyyy'}}
+            </span>
+          </td>
+          <td>
+            <p-tag [value]="getStatusText(cliente)" [severity]="cliente.dataCadastro ? 'success' : 'warning'">
+            </p-tag>
+          </td>
+          <td>
+            <div class="actions">
+              <p-button icon="pi pi-pencil" severity="secondary" size="small" pTooltip="Editar"
+                (onClick)="abrirModal(cliente)">
+              </p-button>
+              <p-button icon="pi pi-trash" severity="danger" size="small" pTooltip="Deletar"
+                (onClick)="deletarCliente(cliente.id!)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center">
+            <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+            <p *ngIf="!loading">Nenhum cliente encontrado</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- Modal de Cliente -->
+<p-dialog [(visible)]="showModal" [modal]="true" [style]="{width: '90vw', maxWidth: '800px'}" [draggable]="false"
+  [resizable]="false" (onHide)="fecharModal()" [header]="editando ? 'Editar Cliente' : 'Novo Cliente'">
+
+  <div class="modal-content">
+    <form (ngSubmit)="salvarCliente()" #clienteForm="ngForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nome">Nome *</label>
+          <input id="nome" type="text" pInputText [(ngModel)]="cliente.nome" name="nome" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input id="email" type="email" pInputText [(ngModel)]="cliente.email" name="email" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="senha">Senha *</label>
+          <input id="senha" type="password" pInputText [(ngModel)]="cliente.senha" name="senha" required>
+        </div>
+
+        <div class="form-group">
+          <label for="telefone">Telefone</label>
+          <input id="telefone" type="text" pInputText [(ngModel)]="cliente.telefone" name="telefone"
+            placeholder="(11) 99999-9999">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="endereco">Endereço</label>
+        <textarea id="endereco" pInputTextarea [(ngModel)]="cliente.endereco" name="endereco" [rows]="2"
+          placeholder="Rua, número, complemento...">
+        </textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cidade">Cidade</label>
+          <input id="cidade" type="text" pInputText [(ngModel)]="cliente.cidade" name="cidade">
+        </div>
+
+        <div class="form-group">
+          <label for="estado">Estado</label>
+          <p-dropdown id="estado" [options]="estados" [(ngModel)]="cliente.estado" name="estado"
+            placeholder="Selecione o estado">
+          </p-dropdown>
+        </div>
+
+        <div class="form-group">
+          <label for="cep">CEP</label>
+          <input id="cep" type="text" pInputText [(ngModel)]="cliente.cep" name="cep" placeholder="00000-000">
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" icon="pi pi-times" (onClick)="fecharModal()" severity="secondary">
+    </p-button>
+    <p-button label="Salvar" icon="pi pi-check" (onClick)="salvarCliente()" [loading]="loading">
+    </p-button>
+  </ng-template>
+</p-dialog>

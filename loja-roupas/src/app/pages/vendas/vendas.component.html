@@ -1,0 +1,199 @@
+<div class="vendas-container">
+  <div class="header">
+    <h1>Gestão de Vendas</h1>
+    <p-button label="Nova Venda" icon="pi pi-plus" (onClick)="abrirModal()" [disabled]="loading">
+    </p-button>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="Buscar por cliente ou ID da venda..." [(ngModel)]="searchTerm">
+      </span>
+    </div>
+    <div class="filter-box">
+      <p-dropdown [options]="statusOptions" [(ngModel)]="selectedStatus" placeholder="Filtrar por status"
+        [showClear]="true">
+      </p-dropdown>
+    </div>
+    <div class="filter-box">
+      <p-dropdown [options]="clientes" [(ngModel)]="selectedCliente" placeholder="Filtrar por cliente"
+        [showClear]="true" optionLabel="nome">
+      </p-dropdown>
+    </div>
+  </div>
+
+  <div class="content">
+    <p-table [value]="getVendasFiltradas()" [loading]="loading" [paginator]="true" [rows]="10"
+      [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} vendas"
+      [rowsPerPageOptions]="[5, 10, 25, 50]" styleClass="p-datatable-sm">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Itens</th>
+          <th>Valor Total</th>
+          <th>Status</th>
+          <th>Data</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-venda>
+        <tr>
+          <td>
+            <strong>#{{venda.id}}</strong>
+          </td>
+          <td>
+            <div class="cliente-info">
+              <strong>{{venda.cliente.nome}}</strong>
+              <small>{{venda.cliente.email}}</small>
+            </div>
+          </td>
+          <td>
+            <div class="itens-info">
+              <span class="quantidade-itens">{{venda.itens.length}} item(s)</span>
+              <div class="produtos-lista">
+                <p-chip *ngFor="let item of venda.itens.slice(0, 2)" [label]="item.produto.nome" severity="secondary">
+                </p-chip>
+                <span *ngIf="venda.itens.length > 2" class="mais-itens">
+                  +{{venda.itens.length - 2}}
+                </span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="valor-info">
+              <span class="valor-total">R$ {{venda.valorTotal | number:'1.2-2'}}</span>
+            </div>
+          </td>
+          <td>
+            <p-tag [value]="getStatusText(venda.status)" [severity]="getStatusSeverity(venda.status)">
+            </p-tag>
+          </td>
+          <td>
+            <span class="data-venda">
+              {{venda.dataVenda | date:'dd/MM/yyyy HH:mm'}}
+            </span>
+          </td>
+          <td>
+            <div class="actions">
+              <p-button icon="pi pi-pencil" severity="secondary" size="small" pTooltip="Editar"
+                (onClick)="abrirModal(venda)">
+              </p-button>
+              <p-button icon="pi pi-trash" severity="danger" size="small" pTooltip="Deletar"
+                (onClick)="deletarVenda(venda.id!)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center">
+            <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+            <p *ngIf="!loading">Nenhuma venda encontrada</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- Modal de Venda -->
+<p-dialog [(visible)]="showModal" [modal]="true" [style]="{width: '95vw', maxWidth: '1200px'}" [draggable]="false"
+  [resizable]="false" (onHide)="fecharModal()" [header]="editando ? 'Editar Venda' : 'Nova Venda'">
+
+  <div class="modal-content">
+    <form (ngSubmit)="salvarVenda()" #vendaForm="ngForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cliente">Cliente *</label>
+          <p-dropdown id="cliente" [options]="clientes" [(ngModel)]="venda.cliente" name="cliente"
+            placeholder="Selecione um cliente" optionLabel="nome" required>
+          </p-dropdown>
+        </div>
+
+        <div class="form-group">
+          <label for="metodoPagamento">Método de Pagamento *</label>
+          <p-dropdown id="metodoPagamento" [options]="metodoPagamentoOptions" [(ngModel)]="venda.metodoPagamento"
+            name="metodoPagamento" placeholder="Selecione o método de pagamento" required>
+          </p-dropdown>
+        </div>
+
+        <div class="form-group">
+          <label for="status">Status</label>
+          <p-dropdown id="status" [options]="statusOptions" [(ngModel)]="venda.status" name="status"
+            placeholder="Selecione o status">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="observacoes">Observações</label>
+        <textarea id="observacoes" pInputTextarea [(ngModel)]="venda.observacoes" name="observacoes" [rows]="3"
+          placeholder="Observações sobre a venda...">
+        </textarea>
+      </div>
+
+      <div class="itens-section">
+        <div class="itens-header">
+          <h3>Itens da Venda</h3>
+          <p-button label="Adicionar Item" icon="pi pi-plus" (onClick)="adicionarItem()" size="small">
+          </p-button>
+        </div>
+
+        <div class="itens-list" *ngIf="venda.itens.length > 0">
+          <div *ngFor="let item of venda.itens; let i = index" class="item-row">
+            <div class="item-produto">
+              <label>Produto</label>
+              <p-dropdown [options]="produtos" [(ngModel)]="item.produto" [optionLabel]="'nome'"
+                (onChange)="atualizarItemPreco(i)">
+              </p-dropdown>
+            </div>
+
+            <div class="item-quantidade">
+              <label>Quantidade</label>
+              <p-inputNumber [(ngModel)]="item.quantidade" [min]="1" (onChange)="atualizarItemPreco(i)">
+              </p-inputNumber>
+            </div>
+
+            <div class="item-preco">
+              <label>Preço Unitário</label>
+              <p-inputNumber [(ngModel)]="item.precoUnitario" mode="currency" currency="BRL" [min]="0"
+                (onChange)="atualizarItemPreco(i)">
+              </p-inputNumber>
+            </div>
+
+            <div class="item-total">
+              <label>Total</label>
+              <p-inputNumber [(ngModel)]="item.precoTotal" mode="currency" currency="BRL" [readonly]="true">
+              </p-inputNumber>
+            </div>
+
+            <div class="item-acoes">
+              <p-button icon="pi pi-trash" severity="danger" size="small" (onClick)="removerItem(i)">
+              </p-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="valor-total-section">
+          <div class="valor-total-display">
+            <h3>Valor Total: R$ {{venda.valorTotal | number:'1.2-2'}}</h3>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" icon="pi pi-times" (onClick)="fecharModal()" severity="secondary">
+    </p-button>
+    <p-button label="Salvar" icon="pi pi-check" (onClick)="salvarVenda()" [loading]="loading">
+    </p-button>
+  </ng-template>
+</p-dialog>
